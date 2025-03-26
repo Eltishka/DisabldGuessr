@@ -126,4 +126,43 @@ function showDistance() {
             overlay.style.display = 'none';
             timeSeconds	= 0;
         }, 1000);
+
+}
+
+let startLong = 30.3;
+let startLati = 59.9;
+let endLong = 30.5;
+let endLati = 60.1;
+let stepLati = 0.05;
+let stepLong = 0.05;
+let currLati = startLati;
+let currLong = startLong;
+let goodCoords = [];
+function getNextPoint() {
+    if(currLong>endLong) {
+        currLong = startLong;
+        if(currLati>endLati)
+        {
+            return {end: true};
+        } else {
+            currLati+=stepLati;
+        }
+    } else {
+        currLong+=stepLong;
+    }
+    return {end: false, latitude: currLati, longitude:currLong};
+}
+
+async function searchBlock() {
+    let res = getNextPoint();
+    while(res.end==false) {
+        let coordinates = [res.latitude, res.longitude];
+        await player.moveTo(coordinates).then(()=>{
+            goodCoords.push({latitude: res.latitude, longitude: res.longitude});
+            console.log({coordinates});
+        }, () => console.log('не подошла'));
+    map.geoObjects.removeAll();
+    res = getNextPoint();   
+    }
+    console.log(goodCoords);
 }

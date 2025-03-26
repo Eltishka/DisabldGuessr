@@ -131,8 +131,8 @@ function showDistance() {
 
 let startLong = 30.3;
 let startLati = 59.9;
-let endLong = 30.5;
-let endLati = 60.1;
+let endLong = 30.3;
+let endLati = 60.0;
 let stepLati = 0.05;
 let stepLong = 0.05;
 let currLati = startLati;
@@ -153,6 +153,20 @@ function getNextPoint() {
     return {end: false, latitude: currLati, longitude:currLong};
 }
 
+const options = {
+    // рекомендуемое название файла
+    suggestedName: 'results.txt',
+    types: [
+      {
+        description: 'Text',
+        accept: {
+          'text/plain': '.txt'
+        }
+      }
+    ],
+    excludeAcceptAllOption: true
+  }
+
 async function searchBlock() {
     let res = getNextPoint();
     while(res.end==false) {
@@ -164,5 +178,11 @@ async function searchBlock() {
     map.geoObjects.removeAll();
     res = getNextPoint();   
     }
-    console.log(goodCoords);
+    console.log(JSON.stringify(goodCoords, null, 2));
+    
+    const fileHandle = await window.showSaveFilePicker(options)
+    const writableStream = await fileHandle.createWritable()
+
+    await writableStream.write(JSON.stringify(goodCoords, null, 2))
+    await writableStream.close()
 }

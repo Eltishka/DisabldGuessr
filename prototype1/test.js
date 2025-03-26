@@ -129,12 +129,17 @@ function showDistance() {
 
 }
 
-let startLong = 30.3;
-let startLati = 59.9;
-let endLong = 30.3;
-let endLati = 60.0;
-let stepLati = 0.05;
-let stepLong = 0.05;
+let startLati = -89;
+let endLati = 89;
+let startLong = 72;
+let endLong = 73;
+// let startLati = -89;
+// let endLati = -88;
+// let startLong = 72;
+// let endLong = 73;
+
+let stepLati = 0.2;
+let stepLong = 0.2;
 let currLati = startLati;
 let currLong = startLong;
 let goodCoords = [];
@@ -179,10 +184,12 @@ async function searchBlock() {
     res = getNextPoint();   
     }
     console.log(JSON.stringify(goodCoords, null, 2));
-    
-    const fileHandle = await window.showSaveFilePicker(options)
-    const writableStream = await fileHandle.createWritable()
+}
 
-    await writableStream.write(JSON.stringify(goodCoords, null, 2))
-    await writableStream.close()
+async function downloadResults() {
+    const fileHandle = await window.showSaveFilePicker(options);
+    const writableStream = await fileHandle.createWritable();
+
+    await writableStream.write(JSON.stringify(goodCoords, null, 2));
+    await writableStream.close();
 }

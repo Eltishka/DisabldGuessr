@@ -131,8 +131,8 @@ function showDistance() {
 
 let startLati = -89;
 let endLati = 89;
-let startLong = 72;
-let endLong = 73;
+let startLong = 74;
+let endLong = 75;
 // let startLati = -89;
 // let endLati = -88;
 // let startLong = 72;

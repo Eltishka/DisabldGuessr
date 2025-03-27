@@ -133,24 +133,36 @@ let startLati = -89;
 let endLati = 89;
 let startLong = 75;
 let endLong = 76;
-// let startLati = -89;
+// let startLati = -89; -- start
 // let endLati = -88;
 // let startLong = 72;
 // let endLong = 73;
 
-let stepLati = 0.2;
-let stepLong = 0.2;
+
+// 40000*stepdeg/360*cos(currlati/180*pi) = stepLongKM
+let stepLongKM = 20
+
 let currLati = startLati;
 let currLong = startLong;
+
+let stepLati = 0.2;
+let stepLong = stepLongKM/40075*360/cos(currLati/180*Math.PI);
+
 let goodCoords = [];
+let isEvenLati = true;
+
 function getNextPoint() {
     if(currLong>endLong) {
-        currLong = startLong;
+        
         if(currLati>endLati)
         {
             return {end: true};
         } else {
             currLati+=stepLati;
+            isEvenLati = !isEvenLati;
+            currLong = startLong;
+            stepLong = stepLongKM/40075*360/cos(currLati/180*Math.PI);
+            if(isEvenLati) currLong+=stepLong/2;
         }
     } else {
         currLong+=stepLong;
@@ -173,6 +185,7 @@ const options = {
   }
 
 async function searchBlock() {
+    stepLong = 0.2;
     let res = getNextPoint();
     while(res.end==false) {
         let coordinates = [res.latitude, res.longitude];
